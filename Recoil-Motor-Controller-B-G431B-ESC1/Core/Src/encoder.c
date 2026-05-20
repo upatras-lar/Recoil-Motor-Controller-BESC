@@ -78,7 +78,7 @@ HAL_StatusTypeDef Encoder_update(Encoder *encoder) {
   HAL_I2C_Master_Receive_IT(encoder->hi2c, AS5600_I2C_ADDR << 1, encoder->i2c_buffer, 2);
 
 #elif ENCODER_TYPE == ENCODER_TYPE_AEDT9810_ABZ
-  raw_reading = (uint16_t)__HAL_TIM_GET_COUNTER(encoder->htim);
+  uint16_t raw_reading = (uint16_t)__HAL_TIM_GET_COUNTER(encoder->htim);
 #endif
 
   // Calculate the change in reading
