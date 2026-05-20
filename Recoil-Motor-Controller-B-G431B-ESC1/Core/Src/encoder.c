@@ -8,11 +8,19 @@
 #include "encoder.h"
 
 
-HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c) {
+HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c, TIM_HandleTypeDef *htim) {
+  encoder->type = ENCODER_TYPE;
   encoder->hi2c = hi2c;
+  encoder->htim = htim;
 //  encoder->i2c_update_counter = 0;
 
-  encoder->cpr = ENCODER_DIRECTION * (1 << ENCODER_PRECISION_BITS);  // 12 bit precision
+#if ENCODER_TYPE == ENCODER_TYPE_AS5600_I2C
+  encoder->cpr = ENCODER_DIRECTION * (1 << AS5600_PRECISION_BITS);
+#elif ENCODER_TYPE == ENCODER_TYPE_AEDT9810_ABZ
+  encoder->cpr = ENCODER_DIRECTION * AEDT9810_COUNTS_PER_REV;
+#else
+#error "Unsupported ENCODER_TYPE"
+#endif
 
   encoder->position_offset = 0.f;
 
@@ -27,6 +35,7 @@ HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c) {
 
   Encoder_resetFluxOffset(encoder);
 
+#if ENCODER_TYPE == ENCODER_TYPE_AS5600_I2C
   HAL_StatusTypeDef status = HAL_ERROR;
   while (status) {
     HAL_I2C_Init(encoder->hi2c);
@@ -38,6 +47,12 @@ HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c) {
   }
 
   return status;
+
+#elif ENCODER_TYPE == ENCODER_TYPE_AEDT9810_ABZ
+    __HAL_TIM_SET_COUNTER(encoder->htim, 0);
+    encoder->position_raw = 0;
+    return HAL_TIM_Encoder_Start(encoder->htim, TIM_CHANNEL_ALL);
+#endif
 }
 
 void Encoder_resetFluxOffset(Encoder *encoder) {
@@ -49,6 +64,7 @@ void Encoder_resetFluxOffset(Encoder *encoder) {
 HAL_StatusTypeDef Encoder_update(Encoder *encoder) {
   // commutation frequency (10 kHz) should be slower than I2C transfer speed (~12.86 kHz)
 
+#if ENCODER_TYPE == ENCODER_TYPE_AS5600_I2C
   // Read the raw reading from the I2C sensor, the range should be [0, cpr-1].
   // safety check to handle encoder data frame mismatch error
   uint16_t raw_reading = (((uint16_t)encoder->i2c_buffer[0]) << 8) | encoder->i2c_buffer[1];
@@ -61,6 +77,9 @@ HAL_StatusTypeDef Encoder_update(Encoder *encoder) {
   // I2C takes ~77.75 us (12.86 kHz) to finish one transaction
   HAL_I2C_Master_Receive_IT(encoder->hi2c, AS5600_I2C_ADDR << 1, encoder->i2c_buffer, 2);
 
+#elif ENCODER_TYPE == ENCODER_TYPE_AEDT9810_ABZ
+  raw_reading = (uint16_t)__HAL_TIM_GET_COUNTER(encoder->htim);
+#endif
 
   // Calculate the change in reading
   int16_t reading_delta = encoder->position_raw - raw_reading;

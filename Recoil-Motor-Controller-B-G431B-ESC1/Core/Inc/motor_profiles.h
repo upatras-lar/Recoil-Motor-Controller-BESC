@@ -64,5 +64,13 @@
 #define MOTOR_CALIBRATION_CURRENT             3
 #endif
 
+#ifdef MOTORPROFILE_TMOTOR_MN4004_300KV
+#define MOTOR_POLE_PAIRS                      12
+#define MOTOR_TORQUE_CONSTANT                 0.03183098861f // Kt = 60/(2π * KV), KV = 300
+#define MOTOR_PHASE_RESISTANCE                0.452f         // Internal Resistance of specs
+#define MOTOR_PHASE_INDUCTANCE                2.703e-04f     // it measured with LRC meter in 1kHz
+#define MOTOR_CALIBRATION_CURRENT             3              // if it's not given, usually is 10-30% of peak current (here is 9A)
+#endif
+
 
 #endif /* INC_MOTOR_PROFILES_H_ */

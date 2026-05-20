@@ -63,8 +63,21 @@
 
 
 /** ======== Encoder Configuration ======== **/
-#define ENCODER_DIRECTION               +1
-#define ENCODER_PRECISION_BITS          12
+typedef enum {
+    ENCODER_TYPE_AS5600_I2C = 0,
+    ENCODER_TYPE_AEDT9810_ABZ = 1,
+} EncoderType;
+
+#define ENCODER_TYPE ENCODER_TYPE_AS5600_I2C
+
+#define ENCODER_DIRECTION +1
+
+/* AS5600 absolute encoder */
+#define AS5600_PRECISION_BITS 12
+
+/* Broadcom AEDT-9810-Z00 incremental ABZ encoder */
+#define AEDT9810_CPR 5000
+#define AEDT9810_COUNTS_PER_REV (4 * AEDT9810_CPR)
 
 /** ======== Motor Selection ======== **/
 

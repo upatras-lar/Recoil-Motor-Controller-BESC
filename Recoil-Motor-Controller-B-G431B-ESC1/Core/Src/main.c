@@ -55,6 +55,7 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim8;
+TIM_HandleTypeDef htim15;
 
 UART_HandleTypeDef huart2;
 
@@ -78,6 +79,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM8_Init(void);
+static void MX_TIM15_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -129,6 +131,7 @@ int main(void)
   MX_TIM6_Init();
   MX_TIM3_Init();
   MX_TIM8_Init();
+  MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
   APP_init();
   /* USER CODE END 2 */
@@ -830,6 +833,33 @@ static void MX_TIM8_Init(void)
 
   /* USER CODE END TIM8_Init 2 */
 
+}
+
+/**
+  * @brief TIM15 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM15_Init(void)
+{
+  TIM_Encoder_InitTypeDef sConfig = {0};
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC1Filter = 0;
+
+  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC2Filter = 0;
+
+  if (HAL_TIM_Encoder_Init(&htim15, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  htim15.Init.Period = AEDT9810_COUNTS_PER_REV - 1;
 }
 
 /**

@@ -20,6 +20,7 @@ extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim15;
 extern UART_HandleTypeDef huart2;
 
 
@@ -40,7 +41,7 @@ void MotorController_init(MotorController *controller) {
   status |= CAN_init(&hfdcan1, 0, 0);
   if (status && !init_error_step) init_error_step = 1;
 
-  status |= Encoder_init(&controller->encoder, &hi2c1);
+  status |= Encoder_init(&controller->encoder, &hi2c1, &htim15);
   if (status && !init_error_step) init_error_step = 2;
   status |= PowerStage_init(&controller->powerstage, &htim1, &hadc1, &hadc2);
   if (status && !init_error_step) init_error_step = 3;
