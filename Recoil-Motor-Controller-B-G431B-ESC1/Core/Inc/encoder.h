@@ -18,8 +18,14 @@
 #include "motor_controller_conf.h"
 
 
-#define AS5600_I2C_ADDR             0x36U
+#define ENCODER_TYPE_AS5600_I2C       1
+#define ENCODER_TYPE_AEDT9810_ABZ     2
 
+#define ENCODER_TYPE    ENCODER_TYPE_AEDT9810_ABZ
+
+#define AEDT9810_COUNTS_PER_REV       5000
+
+#define AS5600_I2C_ADDR             0x36U
 #define AS5600_ZMCO_ADDR            0x00U
 #define AS5600_ZPOS_ADDR            0x01U
 #define AS5600_MPOS_ADDR            0x03U
@@ -32,12 +38,12 @@
 #define AS5600_MAGNITUDE_ADDR       0x1BU
 #define AS5600_BURN_ADDR            0xFFU
 
-
 /**
  * @brief Encoder object.
  */
 typedef struct {
   I2C_HandleTypeDef *hi2c;
+  TIM_HandleTypeDef *htim;
 
   uint8_t   i2c_buffer[2];
   uint8_t   UNUSED_0[2];
@@ -45,6 +51,7 @@ typedef struct {
   uint16_t  UNUSED_1;  // uint16_t  i2c_update_counter;
   uint8_t   UNUSED_2[2];
 
+  uint8_t   type;
   int32_t   cpr;
   float     position_offset;      // in range (-inf, inf)
 
@@ -129,7 +136,7 @@ static inline float Encoder_getVelocity(Encoder *encoder) {
  * @param hi2c Pointer to the I2C_HandleTypeDef structure that configures the I2C interface.
  * @return Status of the initialization process. HAL_OK if successful.
  */
-HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c);
+HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c, TIM_HandleTypeDef *htim);
 
 /**
  * @brief Reset the flux offset and rotation count of the Encoder instance.
