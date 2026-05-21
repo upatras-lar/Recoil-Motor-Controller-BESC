@@ -42,8 +42,6 @@
  * @brief Encoder object.
  */
 typedef struct {
-  EncoderType type;
-
   I2C_HandleTypeDef *hi2c;
   TIM_HandleTypeDef *htim;
 
