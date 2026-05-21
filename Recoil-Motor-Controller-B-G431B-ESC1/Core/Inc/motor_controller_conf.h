@@ -25,7 +25,7 @@
  * The CAN ID is a unique identifier for the device on the CAN bus.
  * The value should be set in range [1, 63].
  */
-#define DEVICE_CAN_ID                   1
+#define DEVICE_CAN_ID                   4
 
 /**
  * First Time Bootup Flag:
@@ -68,10 +68,11 @@
 
 /** ======== Motor Selection ======== **/
 
-#define MOTORPROFILE_MAD_M6C12_150KV
+//#define MOTORPROFILE_MAD_M6C12_150KV
 //#define MOTORPROFILE_MAD_5010_110KV
 //#define MOTORPROFILE_MAD_5010_310KV
 //#define MOTORPROFILE_MAD_5010_370KV
+#define MOTORPROFILE_TMOTOR_MN4004_300KV
 
 // phase order
 #define MOTOR_PHASE_ORDER               +1
