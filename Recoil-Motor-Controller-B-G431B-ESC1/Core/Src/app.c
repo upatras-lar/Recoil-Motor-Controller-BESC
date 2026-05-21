@@ -113,13 +113,16 @@ void APP_init() {
 
   MotorController_init(&controller);
 
+  /* USER CODE BEGIN APP_init_FINAL */
+  HAL_FDCAN_Start(&hfdcan1);
+  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+  /* USER CODE END APP_init_FINAL */
 
 //  HAL_Delay(1000);
 //
 //  controller.position_controller.gear_ratio = 1.f;
 //  controller.position_controller.torque_limit = 1.f;
 //  MotorController_setMode(&controller, MODE_TORQUE);
-
 }
 
 uint8_t APP_getUserButton() {
@@ -134,9 +137,9 @@ float APP_getUserPot() {
 void APP_main() {
   MotorController_updateService(&controller);
 
-//  if (APP_getUserButton()) {
-//    MotorController_setMode(&controller, MODE_CALIBRATION);
-//  }
+  if (APP_getUserButton()) {
+    MotorController_setMode(&controller, MODE_CALIBRATION);
+  }
 
 
 //  controller.current_controller.i_q_target = 5 * APP_getUserPot();
