@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "encoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,11 +55,13 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim8;
+TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+#include "motor_controller.h"
+extern MotorController controller;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -78,6 +80,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM8_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -104,7 +107,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -129,7 +132,13 @@ int main(void)
   MX_TIM6_Init();
   MX_TIM3_Init();
   MX_TIM8_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
+
+  Encoder_init(&controller.encoder, &hi2c1, &htim4);
+//  HAL_FDCAN_Start(&hfdcan1);
+//  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+
   APP_init();
   /* USER CODE END 2 */
 
@@ -137,7 +146,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    APP_main();
+	APP_main();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -833,6 +842,33 @@ static void MX_TIM8_Init(void)
 }
 
 /**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+  TIM_Encoder_InitTypeDef sConfig = {0};
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC1Filter = 0;
+
+  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC2Filter = 0;
+
+  if (HAL_TIM_Encoder_Init(&htim4, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  htim4.Init.Period = AEDT9810_COUNTS_PER_REV - 1;
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -898,7 +934,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIO_CAN_TERM_GPIO_Port, GPIO_CAN_TERM_Pin, GPIO_PIN_RESET);
+  //HAL_GPIO_WritePin(GPIO_CAN_TERM_GPIO_Port, GPIO_CAN_TERM_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIO_CAN_TERM_GPIO_Port, GPIO_CAN_TERM_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : GPIO_CAN_TERM_Pin */
   GPIO_InitStruct.Pin = GPIO_CAN_TERM_Pin;
