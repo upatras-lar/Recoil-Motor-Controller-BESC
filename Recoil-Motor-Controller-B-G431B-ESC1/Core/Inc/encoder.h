@@ -42,6 +42,8 @@
  * @brief Encoder object.
  */
 typedef struct {
+  EncoderType type;
+
   I2C_HandleTypeDef *hi2c;
   TIM_HandleTypeDef *htim;
 
@@ -134,6 +136,7 @@ static inline float Encoder_getVelocity(Encoder *encoder) {
  *
  * @param encoder Pointer to the Encoder struct.
  * @param hi2c Pointer to the I2C_HandleTypeDef structure that configures the I2C interface.
+ * @param htim Pointer to the TIM_HandleTypeDef structure that configures the TIM interface.
  * @return Status of the initialization process. HAL_OK if successful.
  */
 HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c, TIM_HandleTypeDef *htim);
