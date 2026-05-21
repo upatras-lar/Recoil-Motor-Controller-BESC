@@ -5,6 +5,7 @@
  *      Author: TK
  */
 
+#include <stdio.h>
 #include "motor_controller.h"
 
 
@@ -20,6 +21,7 @@ extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
 
 
@@ -40,7 +42,7 @@ void MotorController_init(MotorController *controller) {
   status |= CAN_init(&hfdcan1, 0, 0);
   if (status && !init_error_step) init_error_step = 1;
 
-  status |= Encoder_init(&controller->encoder, &hi2c1);
+  status |= Encoder_init(&controller->encoder, &hi2c1, &htim4);
   if (status && !init_error_step) init_error_step = 2;
   status |= PowerStage_init(&controller->powerstage, &htim1, &hadc1, &hadc2);
   if (status && !init_error_step) init_error_step = 3;
@@ -738,4 +740,3 @@ void MotorController_handleSDO(MotorController *controller, CAN_Frame *rx_frame,
     controller->error |= ERROR_CAN_RX_FAULT;
   }
 }
-
