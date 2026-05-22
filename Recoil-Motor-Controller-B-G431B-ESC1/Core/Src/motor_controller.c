@@ -16,7 +16,7 @@ extern OPAMP_HandleTypeDef hopamp1;
 extern OPAMP_HandleTypeDef hopamp2;
 extern OPAMP_HandleTypeDef hopamp3;
 extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim7;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim8;
@@ -70,12 +70,12 @@ void MotorController_init(MotorController *controller) {
   status |= HAL_ADCEx_InjectedStart(&hadc2);
   if (status && !init_error_step) init_error_step = 10;
 
-  status |= HAL_TIM_Base_Start_IT(&htim2);    // safety watchdog timer
+  status |= HAL_TIM_Base_Start_IT(&htim7);    // safety watchdog timer
   status |= HAL_TIM_Base_Start(&htim6);       // time keeper timer
   status |= HAL_TIM_Base_Start_IT(&htim8);    // fast frame timer
   if (status && !init_error_step) init_error_step = 11;
 
-  __HAL_TIM_SET_AUTORELOAD(&htim2, (controller->watchdog_timeout * 10) - 1);
+  __HAL_TIM_SET_AUTORELOAD(&htim7, (controller->watchdog_timeout * 10) - 1);
   if (controller->fast_frame_frequency) {
     __HAL_TIM_SET_AUTORELOAD(&htim8, (10000 / (controller->fast_frame_frequency)) - 1);
   }
@@ -629,7 +629,7 @@ void MotorController_handleCANMessage(MotorController *controller, CAN_Frame *rx
       tx_frame.size = 8;
       *((uint32_t *)tx_frame.data + 0) = *((uint32_t *)rx_frame->data + 0);
       *((uint32_t *)tx_frame.data + 1) = *((uint32_t *)rx_frame->data + 1);
-      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      __HAL_TIM_SET_COUNTER(&htim7, 0);
       break;
 
     case FUNC_RECEIVE_PDO_2:
@@ -641,7 +641,7 @@ void MotorController_handleCANMessage(MotorController *controller, CAN_Frame *rx
       PositionController_setVelocityTarget(&controller->position_controller, *((float *)rx_frame->data + 1));
       *((float *)tx_frame.data + 0) = PositionController_getPositionMeasured(&controller->position_controller);
       *((float *)tx_frame.data + 1) = PositionController_getVelocityMeasured(&controller->position_controller);
-      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      __HAL_TIM_SET_COUNTER(&htim7, 0);
       break;
 
     case FUNC_RECEIVE_PDO_3:
@@ -653,7 +653,7 @@ void MotorController_handleCANMessage(MotorController *controller, CAN_Frame *rx
       PositionController_setTorqueTarget(&controller->position_controller, *((float *)rx_frame->data + 1));
       *((float *)tx_frame.data + 0) = PositionController_getPositionMeasured(&controller->position_controller);
       *((float *)tx_frame.data + 1) = PositionController_getTorqueMeasured(&controller->position_controller);
-      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      __HAL_TIM_SET_COUNTER(&htim7, 0);
       break;
 
     case FUNC_RECEIVE_PDO_4:
@@ -672,7 +672,7 @@ void MotorController_handleCANMessage(MotorController *controller, CAN_Frame *rx
       break;
 
     case FUNC_HEARTBEAT:
-      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      __HAL_TIM_SET_COUNTER(&htim7, 0);
       break;
   }
 

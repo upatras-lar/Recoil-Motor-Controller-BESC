@@ -32,7 +32,7 @@
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2175:10:HAL_FDCAN_GetLatestTxFifoQRequestBuffer	0	static
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2189:19:HAL_FDCAN_AbortTxRequest	0	static
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2221:19:HAL_FDCAN_GetRxMessage	24	static
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2373:19:HAL_FDCAN_GetTxEvent	8	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2373:19:HAL_FDCAN_GetTxEvent	12	static
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2456:19:HAL_FDCAN_GetHighPriorityMessageStatus	4	static
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2475:19:HAL_FDCAN_GetProtocolStatus	4	static
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c:2507:19:HAL_FDCAN_GetErrorCounters	4	static
