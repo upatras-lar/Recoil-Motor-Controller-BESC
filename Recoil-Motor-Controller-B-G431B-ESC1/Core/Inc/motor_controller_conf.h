@@ -8,6 +8,8 @@
 #ifndef INC_MOTOR_CONTROLLER_CONF_H_
 #define INC_MOTOR_CONTROLLER_CONF_H_
 
+#include <stdio.h>
+
 /** ======== Controller Settings ======== **/
 
 /**

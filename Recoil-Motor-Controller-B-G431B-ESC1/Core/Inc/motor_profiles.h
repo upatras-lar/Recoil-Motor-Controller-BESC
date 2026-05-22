@@ -11,26 +11,15 @@
 
 #include "motor_controller_conf.h"
 
-
 /** ======== Motor Profile Definitions ======== **/
 
 #ifdef MOTORPROFILE_MAD_M6C12_150KV
 #define MOTOR_POLE_PAIRS                      14
-#define MOTOR_TORQUE_CONSTANT                 0.08958f
-#define MOTOR_PHASE_RESISTANCE                0.1379327499999995f
-#define MOTOR_PHASE_INDUCTANCE                3.039166666666666668e-05f
-#define MOTOR_CALIBRATION_CURRENT             5
+#define MOTOR_TORQUE_CONSTANT                 0.0636611977f
+#define MOTOR_PHASE_RESISTANCE                0.090f
+#define MOTOR_PHASE_INDUCTANCE                0.00003065f
+#define MOTOR_CALIBRATION_CURRENT             3
 #endif
-
-/*
-#ifdef MOTORPROFILE_MAD_M6C12_150KV
-#define MOTOR_POLE_PAIRS                      14
-#define MOTOR_TORQUE_CONSTANT                 0.0919f
-#define MOTOR_PHASE_RESISTANCE                0.1886f
-#define MOTOR_PHASE_INDUCTANCE                0.0000325f
-#define MOTOR_CALIBRATION_CURRENT             5
-#endif
-*/
 
 #ifdef MOTORPROFILE_MAD_5010_110KV
 #define MOTOR_POLE_PAIRS                      14
@@ -40,29 +29,12 @@
 #define MOTOR_CALIBRATION_CURRENT             3
 #endif
 
-#ifdef MOTORPROFILE_MAD_5010_310KV
-#define MOTOR_POLE_PAIRS                      14
-//#define MOTOR_TORQUE_CONSTANT                 370
-#define MOTOR_PHASE_RESISTANCE                0.05735062549544696f
-#define MOTOR_PHASE_INDUCTANCE                3.325681588015225e-05f
-#define MOTOR_CALIBRATION_CURRENT             5
+#ifdef MOTORPROFILE_TMOTOR_MN4004_300KV
+#define MOTOR_POLE_PAIRS                      12
+#define MOTOR_TORQUE_CONSTANT                 0.03183098861f // Kt = 60/(2π * KV), KV = 300
+#define MOTOR_PHASE_RESISTANCE                0.452f         // Internal Resistance of specs
+#define MOTOR_PHASE_INDUCTANCE                2.703e-04f     // it measured with LRC meter in 1kHz
+#define MOTOR_CALIBRATION_CURRENT             3              // if it's not given, usually is 10-30% of peak current (here is 9A)
 #endif
-
-#ifdef MOTORPROFILE_MAD_5010_370KV
-#define MOTOR_POLE_PAIRS                      14
-//#define MOTOR_TORQUE_CONSTANT                 370
-#define MOTOR_PHASE_RESISTANCE                0.03000304860153151f
-#define MOTOR_PHASE_INDUCTANCE                1.0717319302328058e-05f
-#define MOTOR_CALIBRATION_CURRENT             5
-#endif
-
-#ifdef MOTORPROFILE_MAD_5010_200KV
-#define MOTOR_POLE_PAIRS                      14
-#define MOTOR_TORQUE_CONSTANT                 0.06588f
-#define MOTOR_PHASE_RESISTANCE                0.1522674999995f
-#define MOTOR_PHASE_INDUCTANCE                2.649166666666666668e-05f
-#define MOTOR_CALIBRATION_CURRENT             3
-#endif
-
 
 #endif /* INC_MOTOR_PROFILES_H_ */

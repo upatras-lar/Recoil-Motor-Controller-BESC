@@ -68,7 +68,7 @@ void PositionController_update(PositionController *controller, Mode mode) {
         controller->position_limit_upper);
 
     float position_error = controller->position_setpoint - controller->position_measured;
-    float velocity_error = 0.f - controller->velocity_measured;
+    float velocity_error = controller->velocity_target - controller->velocity_measured;
 
     controller->position_integrator = clampf(
         controller->position_integrator + controller->position_ki * position_error,
