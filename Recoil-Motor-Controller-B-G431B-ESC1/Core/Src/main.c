@@ -535,11 +535,11 @@ static void MX_OPAMP3_Init(void)
   hopamp3.Instance = OPAMP3;
   hopamp3.Init.PowerMode = OPAMP_POWERMODE_NORMALSPEED;
   hopamp3.Init.Mode = OPAMP_PGA_MODE;
-  hopamp3.Init.NonInvertingInput = OPAMP_NONINVERTINGINPUT_IO1;
+  hopamp3.Init.NonInvertingInput = OPAMP_NONINVERTINGINPUT_IO0;
   hopamp3.Init.InternalOutput = ENABLE;
   hopamp3.Init.TimerControlledMuxmode = OPAMP_TIMERCONTROLLEDMUXMODE_DISABLE;
   hopamp3.Init.PgaConnect = OPAMP_PGA_CONNECT_INVERTINGINPUT_IO0_BIAS;
-  hopamp3.Init.PgaGain = OPAMP_PGA_GAIN_2_OR_MINUS_1;
+  hopamp3.Init.PgaGain = OPAMP_PGA_GAIN_16_OR_MINUS_15;
   hopamp3.Init.UserTrimming = OPAMP_TRIMMING_FACTORY;
   if (HAL_OPAMP_Init(&hopamp3) != HAL_OK)
   {
@@ -725,9 +725,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
+  htim3.Init.Prescaler = 15900;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 19999;
+  htim3.Init.Period = 65535;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
@@ -751,8 +751,8 @@ static void MX_TIM3_Init(void)
   }
   sEncoderIndexConfig.Polarity = TIM_ENCODERINDEX_POLARITY_NONINVERTED;
   sEncoderIndexConfig.Prescaler = TIM_ENCODERINDEX_PRESCALER_DIV1;
-  sEncoderIndexConfig.Filter = 8;
-  sEncoderIndexConfig.FirstIndexEnable = DISABLE;
+  sEncoderIndexConfig.Filter = 0;
+  sEncoderIndexConfig.FirstIndexEnable = ENABLE;
   sEncoderIndexConfig.Position = TIM_ENCODERINDEX_POSITION_00;
   sEncoderIndexConfig.Direction = TIM_ENCODERINDEX_DIRECTION_UP_DOWN;
   if (HAL_TIMEx_ConfigEncoderIndex(&htim3, &sEncoderIndexConfig) != HAL_OK)
