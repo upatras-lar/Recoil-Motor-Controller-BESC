@@ -17,48 +17,25 @@
 #include "foc_math.h"
 #include "motor_controller_conf.h"
 
-
-#define AS5600_I2C_ADDR             0x36U
-
-#define AS5600_ZMCO_ADDR            0x00U
-#define AS5600_ZPOS_ADDR            0x01U
-#define AS5600_MPOS_ADDR            0x03U
-#define AS5600_MANG_ADDR            0x05U
-#define AS5600_CONF_ADDR            0x07U
-#define AS5600_RAW_ANGLE_ADDR       0x0CU
-#define AS5600_ANGLE_ADDR           0x0EU
-#define AS5600_STATUS_ADDR          0x0BU
-#define AS5600_AGC_ADDR             0x1AU
-#define AS5600_MAGNITUDE_ADDR       0x1BU
-#define AS5600_BURN_ADDR            0xFFU
-
-
 /**
  * @brief Encoder object.
  */
 typedef struct {
-  I2C_HandleTypeDef *hi2c;
+  TIM_HandleTypeDef *htim;          // pointer that calculates the pulse count of AEDT-9810-Z00
 
-  uint8_t   i2c_buffer[2];
-  uint8_t   UNUSED_0[2];
-
-  uint16_t  UNUSED_1;  // uint16_t  i2c_update_counter;
-  uint8_t   UNUSED_2[2];
-
-  int32_t   cpr;
-  float     position_offset;      // in range (-inf, inf)
+  int32_t   cpr;                    // counts per revolution
+  float     position_offset;        // in range (-inf, inf)
 
   float     velocity_filter_alpha;
 
-  uint16_t  position_raw;         // in range [0, cpr-1]
-  uint8_t   UNUSED_3[2];
+  uint16_t  position_raw;           // in range [0, cpr-1] -- __HAL_TIM_GET_COUNTER
   int32_t   n_rotations;
 
-  float     position;             // in range (-inf, inf), with offset
+  float     position;               // in range (-inf, inf), with offset
   float     velocity;
 
-  float     flux_offset;
-  float     flux_offset_table[128];
+  float     flux_offset;            // for FOC
+  float     flux_offset_table[128]; // for FOC
 } Encoder;
 
 
@@ -126,10 +103,10 @@ static inline float Encoder_getVelocity(Encoder *encoder) {
  * measured position with only I2C read frames.
  *
  * @param encoder Pointer to the Encoder struct.
- * @param hi2c Pointer to the I2C_HandleTypeDef structure that configures the I2C interface.
+ * @param htim Pointer to the TIM_HandleTypeDef structure that configures the Timer interface.
  * @return Status of the initialization process. HAL_OK if successful.
  */
-HAL_StatusTypeDef Encoder_init(Encoder *encoder, I2C_HandleTypeDef *hi2c);
+HAL_StatusTypeDef Encoder_init(Encoder *encoder, TIM_HandleTypeDef *htim);
 
 /**
  * @brief Reset the flux offset and rotation count of the Encoder instance.
@@ -143,8 +120,12 @@ void Encoder_resetFluxOffset(Encoder *encoder);
 
 /**
  * @brief Update encoder readings.
+*
+ * This function reads the current hardware counter from the Timer, handles overflows/underflows
+ * for multiple rotations, and updates the position and velocity.
  *
  * @param encoder Pointer to the Encoder struct.
+ * @return Status of the update process. HAL_OK if successful.
  */
 HAL_StatusTypeDef Encoder_update(Encoder *encoder);
 

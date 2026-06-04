@@ -66,14 +66,13 @@
 
 /** ======== Encoder Configuration ======== **/
 #define ENCODER_DIRECTION               +1
-#define ENCODER_PRECISION_BITS          12
+#define ENCODER_CPR                     20000U  // 5000 CPR * 4
 
 /** ======== Motor Selection ======== **/
 
-#define MOTORPROFILE_MAD_M6C12_150KV
+//#define MOTORPROFILE_MAD_M6C12_150KV
 //#define MOTORPROFILE_MAD_5010_110KV
-//#define MOTORPROFILE_MAD_5010_310KV
-//#define MOTORPROFILE_MAD_5010_370KV
+#define MOTORPROFILE_TMOTOR_MN4004_300KV
 
 // phase order
 #define MOTOR_PHASE_ORDER               +1
@@ -154,7 +153,7 @@ typedef enum {
   ERROR_OVER_TEMPERATURE          = 0b0000001000000000U,
   ERROR_CAN_RX_FAULT              = 0b0000010000000000U,
   ERROR_CAN_TX_FAULT              = 0b0000100000000000U,
-  ERROR_I2C_FAULT                 = 0b0001000000000000U,
+  UNUSED                          = 0b0001000000000000U,
   ERROR_ENCODER_FAULT             = 0b0010000000000000U,
 } ErrorCode;
 
@@ -251,9 +250,10 @@ typedef enum {
   PARAM_MOTOR_TORQUE_CONSTANT                           = 0x108U,
   PARAM_MOTOR_PHASE_ORDER                               = 0x10CU,
   PARAM_MOTOR_MAX_CALIBRATION_CURRENT                   = 0x110U,
-  PARAM_ENCODER_HI2C                                    = 0x114U,
-  PARAM_ENCODER_I2C_BUFFER                              = 0x118U,
-  PARAM_ENCODER_I2C_UPDATE_COUNTER                      = 0x11CU,
+
+  PARAM_ENCODER_HTIM                                    = 0x114U,
+  PARAM_ENCODER_UNUSED_1                                = 0x118U,
+  PARAM_ENCODER_UNUSED_2                                = 0x11CU,
   PARAM_ENCODER_CPR                                     = 0x120U,
   PARAM_ENCODER_POSITION_OFFSET                         = 0x124U,
   PARAM_ENCODER_VELOCITY_FILTER_ALPHA                   = 0x128U,

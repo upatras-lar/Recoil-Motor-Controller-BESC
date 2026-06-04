@@ -535,7 +535,7 @@ static void MX_OPAMP3_Init(void)
   hopamp3.Instance = OPAMP3;
   hopamp3.Init.PowerMode = OPAMP_POWERMODE_NORMALSPEED;
   hopamp3.Init.Mode = OPAMP_PGA_MODE;
-  hopamp3.Init.NonInvertingInput = OPAMP_NONINVERTINGINPUT_IO1;
+  hopamp3.Init.NonInvertingInput = OPAMP_NONINVERTINGINPUT_IO0;
   hopamp3.Init.InternalOutput = ENABLE;
   hopamp3.Init.TimerControlledMuxmode = OPAMP_TIMERCONTROLLEDMUXMODE_DISABLE;
   hopamp3.Init.PgaConnect = OPAMP_PGA_CONNECT_INVERTINGINPUT_IO0_BIAS;
